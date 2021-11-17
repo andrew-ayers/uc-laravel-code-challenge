@@ -49,7 +49,6 @@ class CarController extends Controller
         // Using the query builder for this... - ALA
         return Car::selectRaw('cars.*')
             ->where('owner_id', '=', $owner->id)
-            ->join('owners', 'cars.owner_id', '=', 'owners.id')
             ->orderBy('id')
             ->get()
             ->toArray();
@@ -65,7 +64,6 @@ class CarController extends Controller
         // Using the query builder for this... - ALA
         return Car::selectRaw('cars.*')
             ->where('address_id', '=', $address->id)
-            ->join('addresses', 'cars.address_id', '=', 'addresses.id')
             ->orderBy('id')
             ->get()
             ->toArray();

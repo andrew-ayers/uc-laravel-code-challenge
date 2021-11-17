@@ -51,7 +51,6 @@ class AddressController extends Controller
         // Using the query builder for this... - ALA
         return Address::selectRaw('addresses.*')
             ->where('owner_id', '=', $owner->id)
-            ->join('owners', 'owners.id', '=', 'addresses.owner_id')
             ->orderBy('id')
             ->get()
             ->toArray();
@@ -67,7 +66,6 @@ class AddressController extends Controller
         // Using the query builder for this... - ALA
         return Address::selectRaw('addresses.*')
             ->join('cars', 'cars.address_id', '=', 'addresses.id')
-            ->join('owners', 'owners.id', '=', 'addresses.owner_id')
             ->where('cars.id', '=', $car->id)
             ->first();
     }
