@@ -2,10 +2,7 @@
     <div>
         <button class="btn btn-primary" @click="handleViewClick">View</button>
         <button class="btn btn-primary" @click="handleEditClick">Edit</button>
-        <delete-confirm-button-component 
-            :model="row.type" 
-            :rowid="row.id"
-        ></delete-confirm-button-component>
+        <delete-confirm-button-component :row="row" />
     </div>
 </template>
 
@@ -28,8 +25,7 @@ export default {
         handleRouting: function(action) {
             // Ref: https://router.vuejs.org/guide/essentials/navigation.html
             this.$router.push({
-                path: `${this.row.type}/${this.row.id}`,
-                query: { action: action }
+                path: `${this.row.type}/${action}/${this.row.id}`
             });
         }
     }

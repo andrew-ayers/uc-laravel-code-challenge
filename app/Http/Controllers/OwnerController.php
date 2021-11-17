@@ -20,9 +20,7 @@ class OwnerController extends Controller
      */
     public function index(): array
     {
-        return Owner::has('addresses')
-            ->has('cars')
-            ->withCount('addresses')
+        return Owner::withCount('addresses')
             ->withCount('cars')            
             ->orderBy('owners.id')
             ->get()

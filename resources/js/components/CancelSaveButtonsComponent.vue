@@ -31,8 +31,7 @@ export default {
             //
             if (document.getElementById("viewedit-form").reportValidity()) {
                 // Then, if that passes, we emit a "doSubmit" event 
-                // signal via the parent component of this component, 
-                // so it will be seen by this component's siblings...
+                // signal to our parent's parent component
                 //
                 this.$parent.$emit("doSubmit");
             }

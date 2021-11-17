@@ -1899,6 +1899,33 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    buttonLabel: String
+  },
+  methods: {
+    // Note: For future expansion... - ALA
+    handleAddClick: function handleAddClick() {
+      alert("The Add-" + this.buttonLabel + " functionality is outside of the scope of this exercise, and is currently not implemented...");
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressTableAveragesComponent.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressTableAveragesComponent.vue?vue&type=script&lang=js& ***!
@@ -2043,6 +2070,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OwnerViewEditComponent.vue */ "./resources/js/components/OwnerViewEditComponent.vue");
+/* harmony import */ var _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddressesViewEditComponent.vue */ "./resources/js/components/AddressesViewEditComponent.vue");
+/* harmony import */ var _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CarsViewEditComponent.vue */ "./resources/js/components/CarsViewEditComponent.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2073,36 +2110,30 @@ __webpack_require__.r(__webpack_exports__);
  * 
  * Ref: https://vegibit.com/vuejs-form-example/
  * Ref: https://medium.com/@mscherrenberg/laravel-5-6-vue-js-simple-form-submission-using-components-92b6d5fd4434
+ * 
+ * Also I needed to implement using the v-model properly on components
+ * to simplify how I updated records:
+ *  
+ * Ref: https://zaengle.com/blog/using-v-model-on-nested-vue-components
  */
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    OwnerViewEditComponent: _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AddressesViewEditComponent: _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CarsViewEditComponent: _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  props: ["isEditing"],
   data: function data() {
     return {
-      isFrom: 'address',
-      ownerSubmitted: false,
-      carsSubmitted: false,
-      fields: []
+      app_fields: {
+        owners: [],
+        addresses: [],
+        cars: []
+      }
     };
-  },
-  methods: {
-    doOwnerSubmitted: function doOwnerSubmitted() {
-      this.ownerSubmitted = true;
-
-      if (this.ownerSubmitted && this.carsSubmitted) {
-        this.$router.go(-1);
-      }
-    },
-    doCarsSubmitted: function doCarsSubmitted() {
-      this.carsSubmitted = true;
-
-      if (this.carsSubmitted && this.ownerSubmitted) {
-        this.$router.go(-1);
-      }
-    }
-  },
-  computed: {
-    isEditing: function isEditing() {
-      return this.$route.query.action == "edit";
-    }
   }
 });
 
@@ -2117,6 +2148,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -2195,6 +2229,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /**
  * I had to do some research on how to make this grid form component
@@ -2204,7 +2241,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * Ref: https://5balloons.info/dynamic-v-model-name-binding-in-v-for-loop-vuejs/
  */
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['isFrom', 'isEditing'],
+  props: ["isFrom", "isEditing"],
   data: function data() {
     return {
       fields: []
@@ -2212,7 +2249,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     showAddresses: function showAddresses() {
-      var resturl = '/address' + (this.isFrom == 'address' ? '' : '/' + this.isFrom) + '/' + this.$route.params.id;
+      var resturl = "/address" + (this.isFrom == "address" ? "" : "/" + this.isFrom) + "/" + this.$route.params.id;
       axios.get(resturl).then(function (res) {
         if (Array.isArray(res.data)) {
           this.fields = res.data.map(function (o) {
@@ -2222,38 +2259,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.fields = [res.data];
         }
       }.bind(this)); // Ideally, we'd have some error handling here... - ALA
-    },
-    // Call the RESTful service to update the addresses data...
-    doAddressesSubmit: function doAddressesSubmit() {
-      var _this = this;
-
-      // Not the most elegant... - ALA
-      this.fields.forEach(function (address) {
-        axios.put('/address/' + address.id, address).then(function (res) {}.bind(_this)); // Ideally, we'd have some error handling here... - ALA
-      }); // Let View/Edit component know it was submitted...
-
-      this.$emit("submittedAddresses");
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
-
-    // Ref: https://stackoverflow.com/questions/38616167/communication-between-sibling-components-in-vue-js-2-0
-    //
-    // Note: This whole event emitter thing was because I
-    // wanted to have reusable components, to build all the
-    // forms with a minimum of repetition of code and 
-    // components; I'm not really sure how successful I was
-    // there... - ALA
-    //
-    // We capture the "doSubmit" event signal from our sibling
-    // component, and call this component's "doAddressesSubmit"
-    // method...
-    //
-    this.$parent.$on("doSubmit", function () {
-      // Only do the needful if in edit mode...
-      _this2.isEditing && _this2.doAddressesSubmit();
-    });
+  computed: {
+    canLink: function canLink() {
+      return this.$route.params.action == "edit" && (this.fields.length == 0 && this.isFrom == "car" || this.isFrom != "car");
+    },
+    canUnlink: function canUnlink() {
+      return this.$route.params.action == "edit" && this.fields.length > 0 && this.isFrom != "address";
+    }
+  },
+  watch: {
+    fields: {
+      handler: function handler() {
+        this.$parent.$emit('inputAddresses', this.fields);
+      },
+      deep: true
+    }
   },
   created: function created() {
     this.showAddresses();
@@ -2314,6 +2336,168 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OwnerViewEdit_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OwnerViewEdit.vue */ "./resources/js/components/OwnerViewEdit.vue");
+/* harmony import */ var _AddressViewEdit_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddressViewEdit.vue */ "./resources/js/components/AddressViewEdit.vue");
+/* harmony import */ var _CarViewEdit_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CarViewEdit.vue */ "./resources/js/components/CarViewEdit.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/**
+ * I had to do some research on how to make forms using Vue and
+ * Bootstrap - these are the resources I studied (along with Vue
+ * and Bootstrap documentation):
+ * 
+ * Ref: https://vegibit.com/vuejs-form-example/
+ * Ref: https://medium.com/@mscherrenberg/laravel-5-6-vue-js-simple-form-submission-using-components-92b6d5fd4434
+ * 
+ * Also I needed to implement using the v-model properly on components
+ * to simplify how I updated records:
+ *  
+ * Ref: https://zaengle.com/blog/using-v-model-on-nested-vue-components
+ */
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    OwnerViewEdit: _OwnerViewEdit_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AddressViewEdit: _AddressViewEdit_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CarViewEdit: _CarViewEdit_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      app_fields: {
+        owners: [],
+        addresses: [],
+        cars: []
+      }
+    };
+  },
+  computed: {
+    isEditing: function isEditing() {
+      return this.$route.params.action == "edit";
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // Ref: https://stackoverflow.com/questions/38616167/communication-between-sibling-components-in-vue-js-2-0
+    //
+    // We capture the "doSubmit" event signal from the child
+    // CancelSaveButtons component, and update our record(s)
+    // as-needed...
+    //
+    this.$on("doSubmit", function () {
+      // Only do the needful if in edit mode...
+      //
+      if (_this.isEditing) {
+        /**
+         * Here is how we could call a RESTful service to unlink
+         * record relationships, but that process is outside the 
+         * scope of the exercise.
+         * 
+         * However, code such as below (and the attendant routes to
+         * the service handler controllers/models) could be used
+         * to perform this process - ALA
+         */
+        // Check if any records are selected for removal (unlinking)...
+        var checks = [_this.app_fields.owners, _this.app_fields.addresses, _this.app_fields.cars];
+        checks.forEach(function (check) {
+          var removeCheck = check.some(function (item) {
+            return item.remove;
+          });
+
+          if (removeCheck) {
+            check.forEach(function (item) {
+              // Only remove/unlink selected items
+              if (item.remove) {// axios.put("/route/to/unlink/" + item.id, item).then(function (res) { 
+                //     // Do more stuff here...                                     
+                // }.bind(this));
+                //
+                // Just a debugging tool...
+                //console.log("REMOVE-ITEM", item);
+              }
+            });
+          }
+        });
+        var modelToUpdate = _this.$route.params.model;
+        var dataToUpdate = {
+          "owner": _this.app_fields.owners,
+          "address": _this.app_fields.addresses,
+          "car": _this.app_fields.cars
+        }; // Call the RESTful service to update the data...
+
+        dataToUpdate[modelToUpdate].forEach(function (item) {
+          axios.put("/" + modelToUpdate + "/" + item.id, item).then(function (res) {// Do more stuff here...?
+          }.bind(_this)); // Ideally, we'd have some error handling here... - ALA
+        }); // Then return back to the addresses table
+
+        _this.$router.go(-1);
+      }
+    });
+  },
+  watch: {
+    app_fields: {
+      handler: function handler(val, oldVal) {// Just a debugging tool...
+        // console.log("APP-FIELDS", this.app_fields);
+      },
+      deep: true
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CancelSaveButtonsComponent.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CancelSaveButtonsComponent.vue?vue&type=script&lang=js& ***!
@@ -2353,8 +2537,7 @@ __webpack_require__.r(__webpack_exports__);
       //
       if (document.getElementById("viewedit-form").reportValidity()) {
         // Then, if that passes, we emit a "doSubmit" event 
-        // signal via the parent component of this component, 
-        // so it will be seen by this component's siblings...
+        // signal to our parent's parent component
         //
         this.$parent.$emit("doSubmit");
       }
@@ -2468,6 +2651,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OwnerViewEditComponent.vue */ "./resources/js/components/OwnerViewEditComponent.vue");
+/* harmony import */ var _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddressesViewEditComponent.vue */ "./resources/js/components/AddressesViewEditComponent.vue");
+/* harmony import */ var _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CarsViewEditComponent.vue */ "./resources/js/components/CarsViewEditComponent.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2498,36 +2691,30 @@ __webpack_require__.r(__webpack_exports__);
  * 
  * Ref: https://vegibit.com/vuejs-form-example/
  * Ref: https://medium.com/@mscherrenberg/laravel-5-6-vue-js-simple-form-submission-using-components-92b6d5fd4434
+ * 
+ * Also I needed to implement using the v-model properly on components
+ * to simplify how I updated records:
+ *  
+ * Ref: https://zaengle.com/blog/using-v-model-on-nested-vue-components
  */
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    OwnerViewEditComponent: _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AddressesViewEditComponent: _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CarsViewEditComponent: _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  props: ["isEditing"],
   data: function data() {
     return {
-      isFrom: 'car',
-      ownerSubmitted: false,
-      addressesSubmitted: false,
-      fields: []
+      app_fields: {
+        owners: [],
+        addresses: [],
+        cars: []
+      }
     };
-  },
-  methods: {
-    doOwnerSubmitted: function doOwnerSubmitted() {
-      this.ownerSubmitted = true;
-
-      if (this.ownerSubmitted && this.addressesSubmitted) {
-        this.$router.go(-1);
-      }
-    },
-    doAddressesSubmitted: function doAddressesSubmitted() {
-      this.addressesSubmitted = true;
-
-      if (this.addressesSubmitted && this.ownerSubmitted) {
-        this.$router.go(-1);
-      }
-    }
-  },
-  computed: {
-    isEditing: function isEditing() {
-      return this.$route.query.action == "edit";
-    }
   }
 });
 
@@ -2542,6 +2729,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -2616,6 +2806,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /**
  * I had to do some research on how to make this grid form component
@@ -2625,7 +2818,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * Ref: https://5balloons.info/dynamic-v-model-name-binding-in-v-for-loop-vuejs/
  */
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['isFrom', 'isEditing'],
+  props: ["isFrom", "isEditing"],
   data: function data() {
     return {
       fields: []
@@ -2633,7 +2826,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     showCars: function showCars() {
-      var resturl = '/car' + (this.isFrom == 'car' ? '' : '/' + this.isFrom) + '/' + this.$route.params.id;
+      var resturl = "/car" + (this.isFrom == "car" ? "" : "/" + this.isFrom) + "/" + this.$route.params.id;
       axios.get(resturl).then(function (res) {
         if (Array.isArray(res.data)) {
           this.fields = res.data.map(function (o) {
@@ -2643,38 +2836,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.fields = [res.data];
         }
       }.bind(this)); // Ideally, we'd have some error handling here... - ALA
-    },
-    // Call the RESTful service to update the cars data...
-    doCarsSubmit: function doCarsSubmit() {
-      var _this = this;
-
-      // Not the most elegant... - ALA
-      this.fields.forEach(function (car) {
-        axios.put('/car/' + car.id, car).then(function (res) {}.bind(_this)); // Ideally, we'd have some error handling here... - ALA
-      }); // Let View/Edit component know it was submitted...
-
-      this.$emit("submittedCars");
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
-
-    // Ref: https://stackoverflow.com/questions/38616167/communication-between-sibling-components-in-vue-js-2-0
-    //
-    // Note: This whole event emitter thing was because I
-    // wanted to have reusable components, to build all the
-    // forms with a minimum of repetition of code and 
-    // components; I'm not really sure how successful I was
-    // there... - ALA
-    //
-    // We capture the "doSubmit" event signal from our sibling
-    // component, and call this component's "doCarsSubmit"
-    // method...
-    //
-    this.$parent.$on("doSubmit", function () {
-      // Only do the needful if in edit mode...
-      _this2.isEditing && _this2.doCarsSubmit();
-    });
+  computed: {
+    canLink: function canLink() {
+      return this.$route.params.action == "edit";
+    },
+    canUnlink: function canUnlink() {
+      return this.$route.params.action == "edit" && this.fields.length > 0 && this.isFrom != "car";
+    }
+  },
+  watch: {
+    fields: {
+      handler: function handler() {
+        this.$parent.$emit('inputCars', this.fields);
+      },
+      deep: true
+    }
   },
   created: function created() {
     this.showCars();
@@ -2698,8 +2876,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    model: String,
-    rowid: Number
+    row: Object
   },
   methods: {
     // Ref: https://v3.vuejs.org/guide/events.html
@@ -2707,11 +2884,38 @@ __webpack_require__.r(__webpack_exports__);
       // If I had more time, I'd do something better 
       // using Vue and Bootstrap, but this will work
       // ok for now - ALA
-      if (confirm("Are you sure you want to delete this " + this.model + "?")) {
-        axios["delete"]('/' + this.model + '/' + this.rowid).then(function (res) {
+      if (confirm("Are you sure you want to delete this " + this.row.type + "?")) {
+        axios["delete"]('/' + this.row.type + '/' + this.row.id).then(function (res) {
           this.$router.go(0);
         }.bind(this)); // Ideally, we'd have some error handling here... - ALA
       }
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    buttonLabel: String
+  },
+  methods: {
+    // Note: For future expansion... - ALA
+    handleLinkClick: function handleLinkClick() {
+      alert("The " + this.buttonLabel + "-Assignment functionality is outside of the scope of this exercise, and is currently not implemented...");
     }
   }
 });
@@ -2866,6 +3070,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OwnerViewEditComponent.vue */ "./resources/js/components/OwnerViewEditComponent.vue");
+/* harmony import */ var _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddressesViewEditComponent.vue */ "./resources/js/components/AddressesViewEditComponent.vue");
+/* harmony import */ var _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CarsViewEditComponent.vue */ "./resources/js/components/CarsViewEditComponent.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2896,36 +3110,30 @@ __webpack_require__.r(__webpack_exports__);
  * 
  * Ref: https://vegibit.com/vuejs-form-example/
  * Ref: https://medium.com/@mscherrenberg/laravel-5-6-vue-js-simple-form-submission-using-components-92b6d5fd4434
+ * 
+ * Also I needed to implement using the v-model properly on components
+ * to simplify how I updated records:
+ *  
+ * Ref: https://zaengle.com/blog/using-v-model-on-nested-vue-components
  */
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    OwnerViewEditComponent: _OwnerViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AddressesViewEditComponent: _AddressesViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CarsViewEditComponent: _CarsViewEditComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  props: ["isEditing"],
   data: function data() {
     return {
-      isFrom: 'owner',
-      addressesSubmitted: false,
-      carsSubmitted: false,
-      fields: []
+      app_fields: {
+        owners: [],
+        addresses: [],
+        cars: []
+      }
     };
-  },
-  methods: {
-    doAddressesSubmitted: function doAddressesSubmitted() {
-      this.addressesSubmitted = true;
-
-      if (this.addressesSubmitted && this.carsSubmitted) {
-        this.$router.go(-1);
-      }
-    },
-    doCarsSubmitted: function doCarsSubmitted() {
-      this.carsSubmitted = true;
-
-      if (this.carsSubmitted && this.addressesSubmitted) {
-        this.$router.go(-1);
-      }
-    }
-  },
-  computed: {
-    isEditing: function isEditing() {
-      return this.$route.query.action == "edit";
-    }
   }
 });
 
@@ -2940,6 +3148,28 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2963,52 +3193,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['isFrom', 'isEditing'],
+  props: ["isFrom", "isEditing"],
   data: function data() {
     return {
-      fields: {
-        first_name: '',
-        last_name: ''
-      }
+      fields: []
     };
   },
   methods: {
-    showOwner: function showOwner() {
-      var resturl = '/owner' + (this.isFrom == 'owner' ? '' : '/' + this.isFrom) + '/' + this.$route.params.id;
+    showOwners: function showOwners() {
+      var resturl = "/owner" + (this.isFrom == "owner" ? "" : "/" + this.isFrom) + "/" + this.$route.params.id;
       axios.get(resturl).then(function (res) {
-        this.fields = res.data;
-      }.bind(this)); // Ideally, we'd have some error handling here... - ALA
-    },
-    // Call the RESTful service to update the owner data...
-    doOwnerSubmit: function doOwnerSubmit() {
-      axios.put('/owner/' + this.$route.params.id, this.fields).then(function (res) {
-        // Let View/Edit component know it was submitted...
-        this.$emit("submittedOwner");
+        if (Array.isArray(res.data)) {
+          this.fields = res.data.map(function (o) {
+            return _objectSpread({}, o);
+          });
+        } else {
+          this.fields = [res.data];
+        }
       }.bind(this)); // Ideally, we'd have some error handling here... - ALA
     }
   },
-  mounted: function mounted() {
-    var _this = this;
-
-    // Ref: https://stackoverflow.com/questions/38616167/communication-between-sibling-components-in-vue-js-2-0
-    //
-    // Note: This whole event emitter thing was because I
-    // wanted to have reusable components, to build all the
-    // forms with a minimum of repetition of code and 
-    // components; I'm not really sure how successful I was
-    // there... - ALA
-    //
-    // We capture the "doSubmit" event signal from our sibling
-    // component, and call this component's "doOwnerSubmit" 
-    // method...
-    //
-    this.$parent.$on("doSubmit", function () {
-      // Only do the needful if in edit mode...
-      _this.isEditing && _this.doOwnerSubmit();
-    });
+  computed: {
+    canLink: function canLink() {
+      return this.$route.params.action == "edit" && this.fields.length == 0;
+    },
+    canUnlink: function canUnlink() {
+      return this.$route.params.action == "edit" && this.fields.length > 0 && this.isFrom != "owner";
+    }
+  },
+  watch: {
+    fields: {
+      handler: function handler() {
+        this.$parent.$emit('inputOwners', this.fields);
+      },
+      deep: true
+    }
   },
   created: function created() {
-    this.showOwner();
+    this.showOwners();
   }
 });
 
@@ -3023,6 +3245,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -3060,9 +3285,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     row: Object
@@ -3078,10 +3300,7 @@ __webpack_require__.r(__webpack_exports__);
     handleRouting: function handleRouting(action) {
       // Ref: https://router.vuejs.org/guide/essentials/navigation.html
       this.$router.push({
-        path: "".concat(this.row.type, "/").concat(this.row.id),
-        query: {
-          action: action
-        }
+        path: "".concat(this.row.type, "/").concat(action, "/").concat(this.row.id)
       });
     }
   }
@@ -39087,6 +39306,42 @@ Component.registerHooks = function registerHooks(keys) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "button",
+    {
+      staticClass: "btn btn-primary",
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleAddClick.apply(null, arguments)
+        }
+      }
+    },
+    [_vm._v("Add " + _vm._s(this.buttonLabel))]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressTableAveragesComponent.vue?vue&type=template&id=72b071b2&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressTableAveragesComponent.vue?vue&type=template&id=72b071b2& ***!
@@ -39193,50 +39448,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("form", { attrs: { id: "viewedit-form" } }, [
-            _c("h3", { staticClass: "card-header text-center" }, [
-              _vm._v("Address")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-body" },
-              [
-                _c("addresses-view-edit-component", {
-                  attrs: { "is-from": "address", "is-editing": false }
-                }),
-                _vm._v(" "),
-                _c("owner-view-edit-component", {
-                  attrs: { "is-from": "address", "is-editing": _vm.isEditing },
-                  on: { submittedOwner: _vm.doOwnerSubmitted }
-                }),
-                _vm._v(" "),
-                _c("cars-view-edit-component", {
-                  attrs: { "is-from": "address", "is-editing": _vm.isEditing },
-                  on: { submittedCars: _vm.doCarsSubmitted }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-footer text-center" },
-              [
-                _c("cancel-save-buttons-component", {
-                  attrs: { "is-editing": _vm.isEditing }
-                })
-              ],
-              1
-            )
-          ])
-        ])
-      ])
-    ])
+  return _c("div", [
+    _c("h3", { staticClass: "card-header text-center" }, [_vm._v("Address")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _c("addresses-view-edit-component", {
+          attrs: {
+            "is-from": "address",
+            "is-editing": _vm.isEditing,
+            fields: _vm.app_fields.addresses
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.addresses = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.addresses,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "addresses", $$v)
+            },
+            expression: "app_fields.addresses"
+          }
+        }),
+        _vm._v(" "),
+        _c("owner-view-edit-component", {
+          attrs: {
+            "is-from": "address",
+            "is-editing": false,
+            fields: _vm.app_fields.owners
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.owners = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.owners,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "owners", $$v)
+            },
+            expression: "app_fields.owners"
+          }
+        }),
+        _vm._v(" "),
+        _c("cars-view-edit-component", {
+          attrs: {
+            "is-from": "address",
+            "is-editing": false,
+            fields: _vm.app_fields.cars
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.cars = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.cars,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "cars", $$v)
+            },
+            expression: "app_fields.cars"
+          }
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -39265,7 +39545,23 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Addresses")]),
+          _c(
+            "div",
+            {
+              staticClass:
+                "card-header d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("span", { staticClass: "font-weight-bold" }, [
+                _vm._v("Addresses")
+              ]),
+              _vm._v(" "),
+              _c("add-button-component", {
+                attrs: { "button-label": "Address" }
+              })
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -39304,82 +39600,119 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _vm.isFrom != "address"
-          ? _c("label", { staticClass: "font-weight-bold pt-2" }, [
-              _vm._v("Addresses")
-            ])
+          ? _c(
+              "div",
+              {
+                staticClass: "d-flex justify-content-between align-items-center"
+              },
+              [
+                _c("span", { staticClass: "font-weight-bold py-3" }, [
+                  _vm._v("Address"),
+                  _vm.isFrom != "car" ? _c("span", [_vm._v("es")]) : _vm._e()
+                ]),
+                _vm._v(" "),
+                _vm.canLink
+                  ? _c("link-button-component", {
+                      attrs: { "button-label": "Address" }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "container p-0 m-0 border" }, [
-          _c("div", { staticClass: "container border-bottom" }, [
-            _c("div", { staticClass: "d-flex flex-row" }, [
-              _vm.isFrom != "address"
-                ? _c(
-                    "div",
-                    {
-                      staticClass:
-                        "d-flex text-center pl-2 pr-4 py-2 font-weight-bold"
-                    },
-                    [_vm._v("ID")]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
-                  staticStyle: { width: "100%" }
-                },
-                [_vm._v("Address")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
-                  staticStyle: { width: "100%" }
-                },
-                [_vm._v("City")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
-                  staticStyle: { width: "100%" }
-                },
-                [_vm._v("Country")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
-                  staticStyle: { width: "100%" }
-                },
-                [_vm._v("Postal Code")]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "container" },
-            [
-              _vm._l(_vm.fields, function(field, index) {
-                return [
+        _vm.fields.length == 0
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "container p-2 alert alert-warning border border-warning"
+              },
+              [
+                _vm._v("No assigned address"),
+                _vm.isFrom != "car" ? _c("span", [_vm._v("es")]) : _vm._e(),
+                _vm._v(" found...")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.fields.length > 0
+          ? _c("div", { staticClass: "container p-0 m-0 border" }, [
+              _c("div", { staticClass: "container border-bottom" }, [
+                _c("div", { staticClass: "d-flex flex-row" }, [
                   _c(
                     "div",
                     {
-                      key: index,
-                      staticClass: "d-flex flex-row my-0 py-0 form-group"
+                      staticClass:
+                        "d-flex justify-content-left px-3 py-2 font-weight-bold",
+                      staticStyle: { width: "100%" }
                     },
-                    [
-                      _vm.isFrom != "address"
-                        ? _c(
+                    [_vm._v("Address")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex justify-content-left px-3 py-2 font-weight-bold",
+                      staticStyle: { width: "100%" }
+                    },
+                    [_vm._v("City")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex justify-content-left px-3 py-2 font-weight-bold",
+                      staticStyle: { width: "100%" }
+                    },
+                    [_vm._v("Country")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex justify-content-center px-3 py-2 font-weight-bold",
+                      staticStyle: { width: "100%" }
+                    },
+                    [_vm._v("Postal Code")]
+                  ),
+                  _vm._v(" "),
+                  _vm.canUnlink
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "d-flex justify-content-center px-3 py-2 font-weight-bold",
+                          staticStyle: { width: "100%" }
+                        },
+                        [_vm._v("Remove?")]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "container" },
+                [
+                  _vm._l(_vm.fields, function(field, index) {
+                    return [
+                      _c(
+                        "div",
+                        {
+                          key: index,
+                          staticClass:
+                            "d-flex align-items-center flex-row my-0 py-0 form-group"
+                        },
+                        [
+                          _c(
                             "div",
                             {
-                              staticClass:
-                                "d-flex text-center pl-2 pr-4 pt-4 pb-2"
+                              staticClass: "d-flex justify-content-left p-3",
+                              staticStyle: { width: "100%" }
                             },
                             [
                               _c("input", {
@@ -39387,201 +39720,248 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: field.id,
-                                    expression: "field.id"
+                                    value: _vm.fields[index].address,
+                                    expression: "fields[index].address"
                                   }
                                 ],
                                 staticClass: "form-control",
                                 attrs: {
-                                  type: "hidden",
-                                  name: "field-id-" + index
+                                  type: "text",
+                                  name: "field-address-" + index,
+                                  placeholder: "Enter the address",
+                                  minlength: "1",
+                                  maxlength: "255",
+                                  readonly: !_vm.isEditing,
+                                  required: ""
                                 },
-                                domProps: { value: field.id },
+                                domProps: { value: _vm.fields[index].address },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.$set(field, "id", $event.target.value)
+                                    _vm.$set(
+                                      _vm.fields[index],
+                                      "address",
+                                      $event.target.value
+                                    )
                                   }
                                 }
-                              }),
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(field.id) +
-                                  "\n                            "
-                              )
+                              })
                             ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "d-flex text-left p-3",
-                          staticStyle: { width: "100%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: field.address,
-                                expression: "field.address"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "field-address-" + index,
-                              placeholder: "Enter the address",
-                              minlength: "1",
-                              maxlength: "255",
-                              readonly: !_vm.isEditing,
-                              required: ""
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "d-flex justify-content-left p-3",
+                              staticStyle: { width: "100%" }
                             },
-                            domProps: { value: field.address },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fields[index].city,
+                                    expression: "fields[index].city"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  name: "field-city-" + index,
+                                  placeholder: "Enter the city",
+                                  minlength: "1",
+                                  maxlength: "255",
+                                  readonly: !_vm.isEditing,
+                                  required: ""
+                                },
+                                domProps: { value: _vm.fields[index].city },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fields[index],
+                                      "city",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(field, "address", $event.target.value)
-                              }
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "d-flex text-left p-3",
-                          staticStyle: { width: "100%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: field.city,
-                                expression: "field.city"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "field-city-" + index,
-                              placeholder: "Enter the city",
-                              minlength: "1",
-                              maxlength: "255",
-                              readonly: !_vm.isEditing,
-                              required: ""
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "d-flex justify-content-left p-3",
+                              staticStyle: { width: "100%" }
                             },
-                            domProps: { value: field.city },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fields[index].country,
+                                    expression: "fields[index].country"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  name: "field-country-" + index,
+                                  placeholder: "Enter the country",
+                                  minlength: "1",
+                                  maxlength: "255",
+                                  readonly: !_vm.isEditing,
+                                  required: ""
+                                },
+                                domProps: { value: _vm.fields[index].country },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fields[index],
+                                      "country",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(field, "city", $event.target.value)
-                              }
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "d-flex text-left p-3",
-                          staticStyle: { width: "100%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: field.country,
-                                expression: "field.country"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "field-country-" + index,
-                              placeholder: "Enter the country",
-                              minlength: "1",
-                              maxlength: "255",
-                              readonly: !_vm.isEditing,
-                              required: ""
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "d-flex justify-content-center p-3",
+                              staticStyle: { width: "100%" }
                             },
-                            domProps: { value: field.country },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fields[index].postal_code,
+                                    expression: "fields[index].postal_code"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  name: "field-postal_code-" + index,
+                                  placeholder: "Enter the postal code",
+                                  minlength: "1",
+                                  maxlength: "255",
+                                  readonly: !_vm.isEditing,
+                                  required: ""
+                                },
+                                domProps: {
+                                  value: _vm.fields[index].postal_code
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fields[index],
+                                      "postal_code",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(field, "country", $event.target.value)
-                              }
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "d-flex text-left p-3",
-                          staticStyle: { width: "100%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: field.postal_code,
-                                expression: "field.postal_code"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "field-postal_code-" + index,
-                              placeholder: "Enter the postal code",
-                              minlength: "1",
-                              maxlength: "255",
-                              readonly: !_vm.isEditing,
-                              required: ""
-                            },
-                            domProps: { value: field.postal_code },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  field,
-                                  "postal_code",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _vm.canUnlink
+                            ? _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "d-flex justify-content-center p-3",
+                                  staticStyle: { width: "100%" }
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.fields[index].remove,
+                                        expression: "fields[index].remove"
+                                      }
+                                    ],
+                                    staticClass: "form-control form-control-sm",
+                                    attrs: {
+                                      type: "checkbox",
+                                      name: "field-remove-" + index
+                                    },
+                                    domProps: {
+                                      checked: Array.isArray(
+                                        _vm.fields[index].remove
+                                      )
+                                        ? _vm._i(
+                                            _vm.fields[index].remove,
+                                            null
+                                          ) > -1
+                                        : _vm.fields[index].remove
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$a = _vm.fields[index].remove,
+                                          $$el = $event.target,
+                                          $$c = $$el.checked ? true : false
+                                        if (Array.isArray($$a)) {
+                                          var $$v = null,
+                                            $$i = _vm._i($$a, $$v)
+                                          if ($$el.checked) {
+                                            $$i < 0 &&
+                                              _vm.$set(
+                                                _vm.fields[index],
+                                                "remove",
+                                                $$a.concat([$$v])
+                                              )
+                                          } else {
+                                            $$i > -1 &&
+                                              _vm.$set(
+                                                _vm.fields[index],
+                                                "remove",
+                                                $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1))
+                                              )
+                                          }
+                                        } else {
+                                          _vm.$set(
+                                            _vm.fields[index],
+                                            "remove",
+                                            $$c
+                                          )
+                                        }
+                                      }
+                                    }
+                                  })
+                                ]
+                              )
+                            : _vm._e()
                         ]
                       )
                     ]
-                  )
-                ]
-              })
-            ],
-            2
-          )
-        ])
+                  })
+                ],
+                2
+              )
+            ])
+          : _vm._e()
       ])
     ])
   ])
@@ -39717,6 +40097,135 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "form",
+            { attrs: { id: "viewedit-form" } },
+            [
+              this.$route.params.model == "owner"
+                ? _c("owner-view-edit", {
+                    attrs: {
+                      "is-editing": _vm.isEditing,
+                      app_fields: _vm.app_fields.owners
+                    },
+                    on: {
+                      inputOwners: function(fields) {
+                        _vm.app_fields.owners = fields
+                      },
+                      inputAddresses: function(fields) {
+                        _vm.app_fields.addresses = fields
+                      },
+                      inputCars: function(fields) {
+                        _vm.app_fields.cars = fields
+                      }
+                    },
+                    model: {
+                      value: _vm.app_fields,
+                      callback: function($$v) {
+                        _vm.app_fields = $$v
+                      },
+                      expression: "app_fields"
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              this.$route.params.model == "address"
+                ? _c("address-view-edit", {
+                    attrs: {
+                      "is-editing": _vm.isEditing,
+                      addresses: _vm.app_fields.addresses
+                    },
+                    on: {
+                      inputOwners: function(fields) {
+                        _vm.app_fields.owners = fields
+                      },
+                      inputAddresses: function(fields) {
+                        _vm.app_fields.addresses = fields
+                      },
+                      inputCars: function(fields) {
+                        _vm.app_fields.cars = fields
+                      }
+                    },
+                    model: {
+                      value: _vm.app_fields,
+                      callback: function($$v) {
+                        _vm.app_fields = $$v
+                      },
+                      expression: "app_fields"
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              this.$route.params.model == "car"
+                ? _c("car-view-edit", {
+                    attrs: {
+                      "is-editing": _vm.isEditing,
+                      cars: _vm.app_fields.cars
+                    },
+                    on: {
+                      inputOwners: function(fields) {
+                        _vm.app_fields.owners = fields
+                      },
+                      inputAddresses: function(fields) {
+                        _vm.app_fields.addresses = fields
+                      },
+                      inputCars: function(fields) {
+                        _vm.app_fields.cars = fields
+                      }
+                    },
+                    model: {
+                      value: _vm.app_fields,
+                      callback: function($$v) {
+                        _vm.app_fields = $$v
+                      },
+                      expression: "app_fields"
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "card-footer text-center" },
+                [
+                  _c("cancel-save-buttons-component", {
+                    attrs: { "is-editing": _vm.isEditing }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CancelSaveButtonsComponent.vue?vue&type=template&id=6bd040de&":
 /*!*****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CancelSaveButtonsComponent.vue?vue&type=template&id=6bd040de& ***!
@@ -39835,50 +40344,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("form", { attrs: { id: "viewedit-form" } }, [
-            _c("h3", { staticClass: "card-header text-center" }, [
-              _vm._v("Car")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-body" },
-              [
-                _c("cars-view-edit-component", {
-                  attrs: { "is-from": "car", "is-editing": false }
-                }),
-                _vm._v(" "),
-                _c("owner-view-edit-component", {
-                  attrs: { "is-from": "car", "is-editing": _vm.isEditing },
-                  on: { submittedOwner: _vm.doOwnerSubmitted }
-                }),
-                _vm._v(" "),
-                _c("addresses-view-edit-component", {
-                  attrs: { "is-from": "car", "is-editing": _vm.isEditing },
-                  on: { submittedAddresses: _vm.doAddressesSubmitted }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-footer text-center" },
-              [
-                _c("cancel-save-buttons-component", {
-                  attrs: { "is-editing": _vm.isEditing }
-                })
-              ],
-              1
-            )
-          ])
-        ])
-      ])
-    ])
+  return _c("div", [
+    _c("h3", { staticClass: "card-header text-center" }, [_vm._v("Car")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _c("cars-view-edit-component", {
+          attrs: {
+            "is-from": "car",
+            "is-editing": _vm.isEditing,
+            fields: _vm.app_fields.cars
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.cars = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.cars,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "cars", $$v)
+            },
+            expression: "app_fields.cars"
+          }
+        }),
+        _vm._v(" "),
+        _c("owner-view-edit-component", {
+          attrs: {
+            "is-from": "car",
+            "is-editing": false,
+            fields: _vm.app_fields.owners
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.owners = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.owners,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "owners", $$v)
+            },
+            expression: "app_fields.owners"
+          }
+        }),
+        _vm._v(" "),
+        _c("addresses-view-edit-component", {
+          attrs: {
+            "is-from": "car",
+            "is-editing": false,
+            fields: _vm.app_fields.addresses
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.addresses = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.addresses,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "addresses", $$v)
+            },
+            expression: "app_fields.addresses"
+          }
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -39907,7 +40441,19 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Cars")]),
+          _c(
+            "div",
+            {
+              staticClass:
+                "card-header d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("span", { staticClass: "font-weight-bold" }, [_vm._v("Cars")]),
+              _vm._v(" "),
+              _c("add-button-component", { attrs: { "button-label": "Car" } })
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -39946,29 +40492,50 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _vm.isFrom != "car"
-          ? _c("label", { staticClass: "font-weight-bold pt-2" }, [
-              _vm._v("Cars")
-            ])
+          ? _c(
+              "div",
+              {
+                staticClass: "d-flex justify-content-between align-items-center"
+              },
+              [
+                _c("span", { staticClass: "font-weight-bold py-3" }, [
+                  _vm._v("Car"),
+                  _vm.isFrom != "car" ? _c("span", [_vm._v("s")]) : _vm._e()
+                ]),
+                _vm._v(" "),
+                _vm.canLink
+                  ? _c("link-button-component", {
+                      attrs: { "button-label": "Car" }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.fields.length == 0
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "container p-2 alert alert-warning border border-warning"
+              },
+              [
+                _vm._v("No assigned car"),
+                _vm.isFrom != "car" ? _c("span", [_vm._v("s")]) : _vm._e(),
+                _vm._v(" found...")
+              ]
+            )
           : _vm._e(),
         _vm._v(" "),
         _c("div", { staticClass: "container p-0 m-0 border" }, [
           _c("div", { staticClass: "container border-bottom" }, [
             _c("div", { staticClass: "d-flex flex-row" }, [
-              _vm.isFrom != "car"
-                ? _c(
-                    "div",
-                    {
-                      staticClass:
-                        "d-flex text-center pl-2 pr-4 py-2 font-weight-bold"
-                    },
-                    [_vm._v("ID")]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
               _c(
                 "div",
                 {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
+                  staticClass:
+                    "d-flex justify-content-left px-3 py-2 font-weight-bold",
                   staticStyle: { width: "100%" }
                 },
                 [_vm._v("Make")]
@@ -39977,7 +40544,8 @@ var render = function() {
               _c(
                 "div",
                 {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
+                  staticClass:
+                    "d-flex justify-content-left px-3 py-2 font-weight-bold",
                   staticStyle: { width: "100%" }
                 },
                 [_vm._v("Model")]
@@ -39986,11 +40554,24 @@ var render = function() {
               _c(
                 "div",
                 {
-                  staticClass: "d-flex text-left px-3 py-2 font-weight-bold",
+                  staticClass:
+                    "d-flex justify-content-center px-3 py-2 font-weight-bold",
                   staticStyle: { width: "100%" }
                 },
                 [_vm._v("Year")]
-              )
+              ),
+              _vm._v(" "),
+              _vm.canUnlink
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex justify-content-center px-3 py-2 font-weight-bold",
+                      staticStyle: { width: "100%" }
+                    },
+                    [_vm._v("Remove?")]
+                  )
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -40004,54 +40585,15 @@ var render = function() {
                     "div",
                     {
                       key: index,
-                      staticClass: "d-flex flex-row my-0 py-0 form-group"
+                      staticClass:
+                        "d-flex align-items-center flex-row my-0 py-0 form-group"
                     },
                     [
-                      _vm.isFrom != "car"
-                        ? _c(
-                            "div",
-                            {
-                              staticClass:
-                                "d-flex text-center pl-2 pr-4 pt-4 pb-2"
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: field.id,
-                                    expression: "field.id"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "hidden",
-                                  name: "field-id-" + index
-                                },
-                                domProps: { value: field.id },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(field, "id", $event.target.value)
-                                  }
-                                }
-                              }),
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(field.id) +
-                                  "\n                            "
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
                       _c(
                         "div",
                         {
-                          staticClass: "d-flex text-left p-3",
+                          staticClass:
+                            "d-flex justify-content-left text-left p-3",
                           staticStyle: { width: "100%" }
                         },
                         [
@@ -40060,8 +40602,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: field.make,
-                                expression: "field.make"
+                                value: _vm.fields[index].make,
+                                expression: "fields[index].make"
                               }
                             ],
                             staticClass: "form-control",
@@ -40074,13 +40616,17 @@ var render = function() {
                               readonly: !_vm.isEditing,
                               required: ""
                             },
-                            domProps: { value: field.make },
+                            domProps: { value: _vm.fields[index].make },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(field, "make", $event.target.value)
+                                _vm.$set(
+                                  _vm.fields[index],
+                                  "make",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
@@ -40090,7 +40636,8 @@ var render = function() {
                       _c(
                         "div",
                         {
-                          staticClass: "d-flex text-left p-3",
+                          staticClass:
+                            "d-flex justify-content-left text-left p-3",
                           staticStyle: { width: "100%" }
                         },
                         [
@@ -40099,8 +40646,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: field.model,
-                                expression: "field.model"
+                                value: _vm.fields[index].model,
+                                expression: "fields[index].model"
                               }
                             ],
                             staticClass: "form-control",
@@ -40113,13 +40660,17 @@ var render = function() {
                               readonly: !_vm.isEditing,
                               required: ""
                             },
-                            domProps: { value: field.model },
+                            domProps: { value: _vm.fields[index].model },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(field, "model", $event.target.value)
+                                _vm.$set(
+                                  _vm.fields[index],
+                                  "model",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
@@ -40129,7 +40680,8 @@ var render = function() {
                       _c(
                         "div",
                         {
-                          staticClass: "d-flex text-left p-3",
+                          staticClass:
+                            "d-flex justify-content-center text-left p-3",
                           staticStyle: { width: "100%" }
                         },
                         [
@@ -40138,8 +40690,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: field.year,
-                                expression: "field.year"
+                                value: _vm.fields[index].year,
+                                expression: "fields[index].year"
                               }
                             ],
                             staticClass: "form-control",
@@ -40152,18 +40704,87 @@ var render = function() {
                               readonly: !_vm.isEditing,
                               required: ""
                             },
-                            domProps: { value: field.year },
+                            domProps: { value: _vm.fields[index].year },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(field, "year", $event.target.value)
+                                _vm.$set(
+                                  _vm.fields[index],
+                                  "year",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
                         ]
-                      )
+                      ),
+                      _vm._v(" "),
+                      _vm.canUnlink
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "d-flex justify-content-center p-3",
+                              staticStyle: { width: "100%" }
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fields[index].remove,
+                                    expression: "fields[index].remove"
+                                  }
+                                ],
+                                staticClass: "form-control form-control-sm",
+                                attrs: {
+                                  type: "checkbox",
+                                  name: "field-remove-" + index
+                                },
+                                domProps: {
+                                  checked: Array.isArray(
+                                    _vm.fields[index].remove
+                                  )
+                                    ? _vm._i(_vm.fields[index].remove, null) >
+                                      -1
+                                    : _vm.fields[index].remove
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a = _vm.fields[index].remove,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = null,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            _vm.fields[index],
+                                            "remove",
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            _vm.fields[index],
+                                            "remove",
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
+                                    } else {
+                                      _vm.$set(_vm.fields[index], "remove", $$c)
+                                    }
+                                  }
+                                }
+                              })
+                            ]
+                          )
+                        : _vm._e()
                     ]
                   )
                 ]
@@ -40200,8 +40821,52 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "button",
-    { staticClass: "btn btn-danger", on: { click: _vm.handleDeleteClick } },
+    {
+      staticClass: "btn btn-danger",
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleDeleteClick.apply(null, arguments)
+        }
+      }
+    },
     [_vm._v("Delete")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "button",
+    {
+      staticClass: "btn btn-primary",
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleLinkClick.apply(null, arguments)
+        }
+      }
+    },
+    [_vm._v("Assign " + _vm._s(this.buttonLabel))]
   )
 }
 var staticRenderFns = []
@@ -40325,50 +40990,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("form", { attrs: { id: "viewedit-form" } }, [
-            _c("h3", { staticClass: "card-header text-center" }, [
-              _vm._v("Owner")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-body" },
-              [
-                _c("owner-view-edit-component", {
-                  attrs: { "is-from": "owner", "is-editing": false }
-                }),
-                _vm._v(" "),
-                _c("addresses-view-edit-component", {
-                  attrs: { "is-from": "owner", "is-editing": _vm.isEditing },
-                  on: { submittedAddresses: _vm.doAddressesSubmitted }
-                }),
-                _vm._v(" "),
-                _c("cars-view-edit-component", {
-                  attrs: { "is-from": "owner", "is-editing": _vm.isEditing },
-                  on: { submittedCars: _vm.doCarsSubmitted }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-footer text-center" },
-              [
-                _c("cancel-save-buttons-component", {
-                  attrs: { "is-editing": _vm.isEditing }
-                })
-              ],
-              1
-            )
-          ])
-        ])
-      ])
-    ])
+  return _c("div", [
+    _c("h3", { staticClass: "card-header text-center" }, [_vm._v("Owner")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _c("owner-view-edit-component", {
+          attrs: {
+            "is-from": "owner",
+            "is-editing": _vm.isEditing,
+            fields: _vm.app_fields.owners
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.owners = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.owners,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "owners", $$v)
+            },
+            expression: "app_fields.owners"
+          }
+        }),
+        _vm._v(" "),
+        _c("addresses-view-edit-component", {
+          attrs: {
+            "is-from": "owner",
+            "is-editing": false,
+            fields: _vm.app_fields.addresses
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.addresses = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.addresses,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "addresses", $$v)
+            },
+            expression: "app_fields.addresses"
+          }
+        }),
+        _vm._v(" "),
+        _c("cars-view-edit-component", {
+          attrs: {
+            "is-from": "owner",
+            "is-editing": false,
+            fields: _vm.app_fields.cars
+          },
+          on: {
+            input: function(fields) {
+              _vm.app_fields.cars = fields
+            }
+          },
+          model: {
+            value: _vm.app_fields.cars,
+            callback: function($$v) {
+              _vm.$set(_vm.app_fields, "cars", $$v)
+            },
+            expression: "app_fields.cars"
+          }
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -40395,99 +41085,226 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _vm.isFrom != "owner"
-          ? _c("label", { staticClass: "font-weight-bold pt-2" }, [
-              _vm._v("Owner")
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("div", { staticClass: "container p-0 m-0 border" }, [
-          _c("div", { staticClass: "container pt-1" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "label",
+      _c(
+        "div",
+        { staticClass: "col-md-12" },
+        [
+          _vm.isFrom != "owner"
+            ? _c(
+                "div",
                 {
-                  staticClass: "font-weight-bold",
-                  attrs: { for: "ownerFirstName" }
+                  staticClass:
+                    "d-flex justify-content-between align-items-center font-weight-bold"
                 },
-                [_vm._v("First Name")]
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fields.first_name,
-                    expression: "fields.first_name"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  id: "ownerFirstName",
-                  placeholder: "Enter the first name",
-                  minlength: "1",
-                  maxlength: "255",
-                  readonly: !_vm.isEditing,
-                  required: ""
-                },
-                domProps: { value: _vm.fields.first_name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.fields, "first_name", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "label",
+                [_c("div", { staticClass: "d-flex py-2" }, [_vm._v("Owner")])]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.fields.length == 0
+            ? _c(
+                "div",
                 {
-                  staticClass: "font-weight-bold",
-                  attrs: { for: "ownerLastName" }
+                  staticClass:
+                    "container p-2 alert alert-warning border border-warning"
                 },
-                [_vm._v("Last Name")]
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fields.last_name,
-                    expression: "fields.last_name"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  id: "ownerLastName",
-                  placeholder: "Enter the last name",
-                  minlength: "1",
-                  maxlength: "255",
-                  readonly: !_vm.isEditing,
-                  required: ""
-                },
-                domProps: { value: _vm.fields.last_name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.fields, "last_name", $event.target.value)
-                  }
-                }
-              })
-            ])
-          ])
-        ])
-      ])
+                [_vm._v("No assigned owner found...")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.fields, function(field, index) {
+            return [
+              _c("div", { key: index, staticClass: "container py-3 border" }, [
+                _c("div", { staticClass: "container" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "font-weight-bold",
+                        attrs: { for: "field-first_name-" + index }
+                      },
+                      [_vm._v("First Name")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fields[index].first_name,
+                          expression: "fields[index].first_name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "field-first_name-" + index,
+                        placeholder: "Enter the first name",
+                        minlength: "1",
+                        maxlength: "255",
+                        readonly: !_vm.isEditing,
+                        required: ""
+                      },
+                      domProps: { value: _vm.fields[index].first_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fields[index],
+                            "first_name",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "font-weight-bold",
+                        attrs: { for: "field-last_name-" + index }
+                      },
+                      [_vm._v("Last Name")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fields[index].last_name,
+                          expression: "fields[index].last_name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "field-last_name-" + index,
+                        placeholder: "Enter the last name",
+                        minlength: "1",
+                        maxlength: "255",
+                        readonly: !_vm.isEditing,
+                        required: ""
+                      },
+                      domProps: { value: _vm.fields[index].last_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fields[index],
+                            "last_name",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "d-flex py-0 font-weight-bold" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex container justify-content-end align-items-center"
+                    },
+                    [
+                      _vm.canLink
+                        ? _c("link-button-component", {
+                            attrs: { "button-label": "Owner" }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.canUnlink
+                        ? _c(
+                            "div",
+                            {
+                              staticClass:
+                                "d-flex flex-nowrap align-items-center"
+                            },
+                            [
+                              _c("div", { staticClass: "d-flex pr-2" }, [
+                                _vm._v("Remove?")
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "d-flex" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fields[index].remove,
+                                      expression: "fields[index].remove"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  staticStyle: { width: "2em" },
+                                  attrs: {
+                                    type: "checkbox",
+                                    name: "field-remove-" + index
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(
+                                      _vm.fields[index].remove
+                                    )
+                                      ? _vm._i(_vm.fields[index].remove, null) >
+                                        -1
+                                      : _vm.fields[index].remove
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.fields[index].remove,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            _vm.$set(
+                                              _vm.fields[index],
+                                              "remove",
+                                              $$a.concat([$$v])
+                                            )
+                                        } else {
+                                          $$i > -1 &&
+                                            _vm.$set(
+                                              _vm.fields[index],
+                                              "remove",
+                                              $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1))
+                                            )
+                                        }
+                                      } else {
+                                        _vm.$set(
+                                          _vm.fields[index],
+                                          "remove",
+                                          $$c
+                                        )
+                                      }
+                                    }
+                                  }
+                                })
+                              ])
+                            ]
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]
+          })
+        ],
+        2
+      )
     ])
   ])
 }
@@ -40517,7 +41334,21 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Owners")]),
+          _c(
+            "div",
+            {
+              staticClass:
+                "card-header d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("span", { staticClass: "font-weight-bold" }, [
+                _vm._v("Owners")
+              ]),
+              _vm._v(" "),
+              _c("add-button-component", { attrs: { "button-label": "Owner" } })
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -40567,9 +41398,7 @@ var render = function() {
         [_vm._v("Edit")]
       ),
       _vm._v(" "),
-      _c("delete-confirm-button-component", {
-        attrs: { model: _vm.row.type, rowid: _vm.row.id }
-      })
+      _c("delete-confirm-button-component", { attrs: { row: _vm.row } })
     ],
     1
   )
@@ -56701,18 +57530,21 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./components/AddButtonComponent.vue": "./resources/js/components/AddButtonComponent.vue",
 	"./components/AddressTableAveragesComponent.vue": "./resources/js/components/AddressTableAveragesComponent.vue",
 	"./components/AddressTableComponent.vue": "./resources/js/components/AddressTableComponent.vue",
 	"./components/AddressViewEdit.vue": "./resources/js/components/AddressViewEdit.vue",
 	"./components/Addresses.vue": "./resources/js/components/Addresses.vue",
 	"./components/AddressesViewEditComponent.vue": "./resources/js/components/AddressesViewEditComponent.vue",
 	"./components/App.vue": "./resources/js/components/App.vue",
+	"./components/AppViewEdit.vue": "./resources/js/components/AppViewEdit.vue",
 	"./components/CancelSaveButtonsComponent.vue": "./resources/js/components/CancelSaveButtonsComponent.vue",
 	"./components/CarTableComponent.vue": "./resources/js/components/CarTableComponent.vue",
 	"./components/CarViewEdit.vue": "./resources/js/components/CarViewEdit.vue",
 	"./components/Cars.vue": "./resources/js/components/Cars.vue",
 	"./components/CarsViewEditComponent.vue": "./resources/js/components/CarsViewEditComponent.vue",
 	"./components/DeleteConfirmButtonComponent.vue": "./resources/js/components/DeleteConfirmButtonComponent.vue",
+	"./components/LinkButtonComponent.vue": "./resources/js/components/LinkButtonComponent.vue",
 	"./components/OwnerTableAveragesComponent.vue": "./resources/js/components/OwnerTableAveragesComponent.vue",
 	"./components/OwnerTableComponent.vue": "./resources/js/components/OwnerTableComponent.vue",
 	"./components/OwnerViewEdit.vue": "./resources/js/components/OwnerViewEdit.vue",
@@ -56853,6 +57685,75 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/AddButtonComponent.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/AddButtonComponent.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddButtonComponent.vue?vue&type=template&id=272f2bb5& */ "./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5&");
+/* harmony import */ var _AddButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddButtonComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AddButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AddButtonComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AddButtonComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AddButtonComponent.vue?vue&type=template&id=272f2bb5& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddButtonComponent.vue?vue&type=template&id=272f2bb5&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddButtonComponent_vue_vue_type_template_id_272f2bb5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -57270,6 +58171,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/AppViewEdit.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/AppViewEdit.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppViewEdit.vue?vue&type=template&id=78b52275& */ "./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275&");
+/* harmony import */ var _AppViewEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppViewEdit.vue?vue&type=script&lang=js& */ "./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AppViewEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AppViewEdit.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AppViewEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AppViewEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AppViewEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AppViewEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AppViewEdit.vue?vue&type=template&id=78b52275& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AppViewEdit.vue?vue&type=template&id=78b52275&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AppViewEdit_vue_vue_type_template_id_78b52275___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/CancelSaveButtonsComponent.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/CancelSaveButtonsComponent.vue ***!
@@ -57679,6 +58649,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteConfirmButtonComponent_vue_vue_type_template_id_748c8981___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteConfirmButtonComponent_vue_vue_type_template_id_748c8981___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/LinkButtonComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/LinkButtonComponent.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LinkButtonComponent.vue?vue&type=template&id=42fc8ff6& */ "./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6&");
+/* harmony import */ var _LinkButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LinkButtonComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LinkButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LinkButtonComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LinkButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LinkButtonComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LinkButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LinkButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LinkButtonComponent.vue?vue&type=template&id=42fc8ff6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LinkButtonComponent.vue?vue&type=template&id=42fc8ff6&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LinkButtonComponent_vue_vue_type_template_id_42fc8ff6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -58111,11 +59150,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Owners_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Owners.vue */ "./resources/js/components/Owners.vue");
 /* harmony import */ var _components_Addresses_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Addresses.vue */ "./resources/js/components/Addresses.vue");
 /* harmony import */ var _components_Cars_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Cars.vue */ "./resources/js/components/Cars.vue");
-/* harmony import */ var _components_OwnerViewEdit_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/OwnerViewEdit.vue */ "./resources/js/components/OwnerViewEdit.vue");
-/* harmony import */ var _components_AddressViewEdit_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/AddressViewEdit.vue */ "./resources/js/components/AddressViewEdit.vue");
-/* harmony import */ var _components_CarViewEdit_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/CarViewEdit.vue */ "./resources/js/components/CarViewEdit.vue");
-
-
+/* harmony import */ var _components_AppViewEdit_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/AppViewEdit.vue */ "./resources/js/components/AppViewEdit.vue");
 
 
 
@@ -58134,17 +59169,9 @@ var routes = [{
   path: '/cars',
   component: _components_Cars_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
 }, {
-  name: 'owner',
-  path: '/owner/:id',
-  component: _components_OwnerViewEdit_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
-}, {
-  name: 'address',
-  path: '/address/:id',
-  component: _components_AddressViewEdit_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
-}, {
-  name: 'car',
-  path: '/car/:id',
-  component: _components_CarViewEdit_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+  name: 'appviewedit',
+  path: '/:model/:action/:id',
+  component: _components_AppViewEdit_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
 }];
 
 /***/ }),
