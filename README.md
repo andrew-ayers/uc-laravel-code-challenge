@@ -6,26 +6,26 @@
 - Download and install composer for the project (see https://getcomposer.org/download/)
 - Then run the following command (see https://getcomposer.org/doc/01-basic-usage.md):
   ```
-  $ php composer.phar update
+  php composer.phar update
   ```
 - Run the following commands to get a functional and seeded application:
   ```
-  $ php artisan key:generate
-  $ php artisan migrate:fresh
-  $ php artisan db:seed
-  $ npm install
-  $ npm run dev
-  $ php artisan serve
+  php artisan key:generate
+  php artisan migrate:fresh
+  php artisan db:seed
+  npm install
+  npm run dev
+  php artisan serve
   ```
 - I found that during development, updates to the code wouldn't automagically be available. In that case, "CTRL-C" in the terminal running the server, then run the following string of commands instead:
   
   ```
-  $ npm run dev; php artisan cache:clear; php artisan config:clear; php artisan view:clear; php artisan serve
+  npm run dev; php artisan cache:clear; php artisan config:clear; php artisan view:clear; php artisan serve
   ```
 - This clears out all the artisan caching then restarts the server. If you find that you need to reset or refresh the database tables, simply run:
   
   ```
-  $ php artisan migrate:fresh; php artisan db:seed
+  php artisan migrate:fresh; php artisan db:seed
   ```
 - And the tables will be re-migrated and seeded with a new set of random data...
 
