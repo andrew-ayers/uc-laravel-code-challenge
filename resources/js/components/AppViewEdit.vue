@@ -7,7 +7,6 @@
                         <owner-view-edit 
                             :is-editing="isEditing" 
                             v-model="app_fields"
-                            :app_fields="app_fields.owners"
                             @inputOwners="(fields) => {app_fields.owners = fields}"
                             @inputAddresses="(fields) => {app_fields.addresses = fields}"
                             @inputCars="(fields) => {app_fields.cars = fields}"
@@ -16,7 +15,6 @@
                         <address-view-edit 
                             :is-editing="isEditing" 
                             v-model="app_fields"
-                            :addresses="app_fields.addresses"
                             @inputOwners="(fields) => {app_fields.owners = fields}"
                             @inputAddresses="(fields) => {app_fields.addresses = fields}"
                             @inputCars="(fields) => {app_fields.cars = fields}"
@@ -25,7 +23,6 @@
                         <car-view-edit 
                             :is-editing="isEditing" 
                             v-model="app_fields"
-                            :cars="app_fields.cars"
                             @inputOwners="(fields) => {app_fields.owners = fields}"
                             @inputAddresses="(fields) => {app_fields.addresses = fields}"
                             @inputCars="(fields) => {app_fields.cars = fields}"

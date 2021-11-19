@@ -5,23 +5,14 @@
             <owner-view-edit-component 
                 is-from="owner" 
                 :is-editing="isEditing" 
-                v-model="app_fields.owners"
-                :fields="app_fields.owners"
-                @input="(fields) => {app_fields.owners = fields}"
             />
             <addresses-view-edit-component 
                 is-from="owner" 
                 :is-editing="false" 
-                v-model="app_fields.addresses"
-                :fields="app_fields.addresses"
-                @input="(fields) => {app_fields.addresses = fields}"
             />
             <cars-view-edit-component 
                 is-from="owner" 
                 :is-editing="false" 
-                v-model="app_fields.cars"
-                :fields="app_fields.cars" 
-                @input="(fields) => {app_fields.cars = fields}"
             />
         </div>
     </div>
